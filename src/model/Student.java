@@ -1,5 +1,6 @@
+package model;
 public class Student {
-    private int id = 0;
+    private int id;
     private String nom;
     private int age;
 
