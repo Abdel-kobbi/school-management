@@ -4,45 +4,42 @@ import java.util.Scanner;
 
 import model.School;
 import model.Student;
-import view.View;
+import view.StudentView;
 
-public class Controller {
+public class StudentController {
 
     private static Scanner input = new Scanner(System.in);
 
     private School school;
-    private View view;
+    private StudentView studentView = new StudentView();
 
-    public Controller(School school, View view) {
+    public StudentController(School school) {
         this.school = school;
-        this.view = view;
     }
 
     public void start() {
         int entry, id, age;
         String nom;
         do {
-            view.displayStudentMenu();
+            studentView.displayStudentMenu();
             entry = input.nextInt();
             switch (entry) {
                 case 1:
-                    System.out.println("Entre votre id");
-                    id = input.nextInt();
-                    input.nextLine();
                     System.out.println("Entre votre nom");
                     nom = input.nextLine();
+                    input.nextLine();
                     System.out.println("Entre votre age");
                     age = input.nextInt();
-                    this.school.addStudent(new Student(id, nom, age));
+                    this.school.addStudent(new Student(nom, age));
                     break;
                 case 2:
-                    view.displayStudent(school.getSchool());
+                    studentView.displayStudent(school.getStudents());
                     break;
                 case 3:
-                    view.displayStudent(school.getSchool());
+                    studentView.displayStudent(school.getStudents());
                     System.out.println("choisi id de l'etudiant supprimer: ");
                     id = input.nextInt();
-                    for (Student etu : school.getSchool()) {
+                    for (Student etu : school.getStudents()) {
                         if (etu.getId() == id) {
                             school.removeStudent(etu);
                             break;

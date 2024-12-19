@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 import model.Student;
 
-public class View {
+public class StudentView {
 
     public void displayStudentMenu() {
+        System.out.println("-------- Gestion des etudiant --------");
         System.out.println("1. Pour ajouter etudiant");
         System.out.println("2. Pour Afficher les etudiants");
         System.out.println("3. Pour supprimer etudiant");
