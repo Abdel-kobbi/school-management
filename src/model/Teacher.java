@@ -31,7 +31,7 @@ public class Teacher {
     }
 
     public String toString(){
-        return "ID: " + this.id + ", Nom: " + this.nom + ", Age: " + this.age + ", Module: " + this.module;
+        return "ID: " + this.getId() + ", Nom: " + this.getNom() + ", Age: " + this.getAge() + ", Module: " + this.getModule();
     }
 
 }

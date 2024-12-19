@@ -1,11 +1,13 @@
 package model;
+
 public class Student {
+    private static int idU = 0;
     private int id;
     private String nom;
     private int age;
 
-    public Student(int id, String nom, int age){
-        this.id = id;
+    public Student(String nom, int age) {
+        this.id = ++idU;
         this.nom = nom;
         this.age = age;
     }
@@ -14,19 +16,19 @@ public class Student {
         return id;
     }
 
-    public String getNom(){
+    public String getNom() {
         return this.nom;
     }
 
-    public int getAge(){
+    public int getAge() {
         return this.age;
     }
 
-    public void setNom(String nom){
+    public void setNom(String nom) {
         this.nom = nom;
     }
 
-    public void setAge(int age){
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -34,8 +36,8 @@ public class Student {
         this.id = id;
     }
 
-    public String toString(){
-        return "Id: " + this.id +", Nom: "+ this.nom + " Age: " + this.age +" ans.";
+    public String toString() {
+        return "Id: " + this.id + ", Nom: " + this.nom + " Age: " + this.age + " ans.";
     }
 
 }

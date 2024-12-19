@@ -1,15 +1,10 @@
-import controller.Controller;
-import model.School;
-import view.View;
+import controller.MainController;
 
 public class App {
     
     public static void main(String[] args) throws Exception {
 
-        School school = new School();
-        View view = new View();
-
-        Controller main = new Controller(school, view);
+        MainController main = new MainController();
 
         main.start();
 
