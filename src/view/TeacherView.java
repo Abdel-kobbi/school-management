@@ -8,10 +8,11 @@ public class TeacherView {
 
     public void displayTeacherMenu(){
         System.out.println("-------- Gestion des Enseignant --------");
-        System.out.println("1. Pour ajouter Enseignant");
+        System.out.println("1. Pour ajouter Enseignants");
         System.out.println("2. Pour Afficher les Enseignant");
         System.out.println("3. Pour supprimer Enseignant");
-        System.out.println("4. Pour sortie");
+        System.out.println("4. Retour au menu principale ");
+        System.out.print("Votre choix: ");
     }
 
 
@@ -20,7 +21,7 @@ public class TeacherView {
         for( Teacher t : teachers){
             System.out.println(t);
         }
-        System.out.println("----- Liste des Enseignant -----");
+        System.out.println("----- Fin Liste des Enseignant -----");
     }
 
 }

@@ -7,13 +7,14 @@ import model.Teacher;
 import view.TeacherView;
 
 public class TeacherController {
-    private static Scanner input = new Scanner(System.in);
+    private static Scanner input;
 
     private TeacherView teacherView = new TeacherView();
     private School school;
 
-    public TeacherController(School school){
-        this.school = school;
+    public TeacherController(){
+        this.school = School.getSchool();
+        input = new Scanner(System.in);
     }
     public void start(){
         int entry, age, id;
@@ -47,6 +48,8 @@ public class TeacherController {
                         }
                     }
                     break;
+                default : 
+                    System.out.println("Choix invalide!");
             }
 
         }while(entry != 4);

@@ -8,13 +8,15 @@ import view.StudentView;
 
 public class StudentController {
 
-    private static Scanner input = new Scanner(System.in);
+    private static Scanner input;
 
     private School school;
-    private StudentView studentView = new StudentView();
+    private StudentView studentView;
 
-    public StudentController(School school) {
-        this.school = school;
+    public StudentController() {
+        this.school = School.getSchool();
+        this.studentView = new StudentView();
+        input = new Scanner(System.in);
     }
 
     public void start() {
@@ -46,6 +48,11 @@ public class StudentController {
                         }
                     }
                     break;
+                case 4:
+                    break;
+                default : 
+                    System.out.println("Choix invalide!");
+
             }
         } while (entry != 4);
 

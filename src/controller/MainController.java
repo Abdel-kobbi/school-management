@@ -1,17 +1,20 @@
 package controller;
 
 import java.util.Scanner;
-
-import model.School;
 import view.MainView;
 
 public class MainController {
-    private static Scanner input = new Scanner(System.in);
-    private MainView mainView = new MainView();
-    private School school = new School();
-    private StudentController studentController = new StudentController(this.school);
-    private TeacherController teacherController = new TeacherController(this.school);
+    private static Scanner input;
+    private MainView mainView;
+    private StudentController studentController;
+    private TeacherController teacherController;
 
+    public MainController(){
+        input = new Scanner(System.in);
+        mainView = new MainView();
+        studentController = new StudentController();
+        teacherController = new TeacherController();
+    }
 
     public void start() {
         int entry;
@@ -25,7 +28,10 @@ public class MainController {
                 case 2:
                     studentController.start();
                     break;
-
+                case 3:
+                    break;
+                default:
+                    System.out.println("Choix invalide!");
             }
         } while (entry != 3);
 

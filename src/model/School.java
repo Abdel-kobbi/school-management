@@ -3,9 +3,19 @@ package model;
 import java.util.ArrayList;
 
 public class School {
-
+    private static School school;
     private ArrayList<Student> students = new ArrayList<>();
     private ArrayList<Teacher> teachers = new ArrayList<>();
+
+    // Utilisation de Design pattern : Singleton
+    private School(){};
+
+    public static School getSchool(){
+        if(school == null ){
+            school = new School();
+        }
+        return school;
+    }
 
     public ArrayList<Student> getStudents() {
         return students;
