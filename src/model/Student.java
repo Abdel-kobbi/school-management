@@ -32,10 +32,6 @@ public class Student {
         this.age = age;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String toString() {
         return "Id: " + this.getId() + ", Nom: " + this.getNom() + " Age: " + this.getAge() + " ans.";
     }

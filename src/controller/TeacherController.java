@@ -20,7 +20,7 @@ public class TeacherController {
         int entry, age, id;
         String nom, module;
         do{
-            teacherView.displayTeacherMenu();
+            this.teacherView.displayTeacherMenu();
             entry = input.nextInt();
             switch (entry) {
                 case 1:
@@ -32,27 +32,45 @@ public class TeacherController {
                     input.nextLine();
                     System.out.print("Entre votre module: ");
                     module = input.nextLine();
-                    school.addTeacher(new Teacher(nom, age, module));
+                    this.school.addTeacher(new Teacher(nom, age, module));
                     break;
                 case 2:
-                    teacherView.displayTeachers(school.getTeachers());
+                    this.teacherView.displayTeachers(school.getTeachers());
                     break;
                 case 3:
-                    teacherView.displayTeachers(school.getTeachers());
+                    this.teacherView.displayTeachers(school.getTeachers());
+                    if(school.getTeachers().size() == 0){
+                        System.err.println("Pas des Enseignants");
+                        break;
+                    }
+                    System.out.print("Entre l'id de l'Enseignant a modifier: ");
+                    id = input.nextInt();
+                    System.out.print("Entre le nouveau nom: ");
+                    input.nextLine();
+                    nom = input.nextLine();
+                    System.out.print("Entre le nouveau age: ");
+                    age = input.nextInt();
+                    input.nextLine();
+                    System.out.print("Entre le nouveau module: ");
+                    module = input.nextLine();
+                    this.school.updateTeacher(school.searchTeacher(id), nom, age, module);;
+                    break;
+                case 4:
+                    this.teacherView.displayTeachers(school.getTeachers());
+                    if(school.getTeachers().size() == 0){
+                        System.err.println("Pas des Enseignants");
+                        break;
+                    }
                     System.out.print("Entre l'id de l'Enseignant a supprimer: ");
                     id = input.nextInt();
-                    for(Teacher t: school.getTeachers()){
-                        if(t.getId() == id){
-                            school.removeTeacher(t);
-                            break;
-                        }
-                    }
+                    this.school.removeTeacher(school.searchTeacher(id));
+                case 5:
                     break;
                 default : 
                     System.out.println("Choix invalide!");
             }
 
-        }while(entry != 4);
+        }while(entry != 5);
     }
 
 

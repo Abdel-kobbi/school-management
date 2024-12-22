@@ -10,8 +10,9 @@ public class StudentView {
         System.out.println("-------- Gestion des etudiant --------");
         System.out.println("1. Pour ajouter etudiant");
         System.out.println("2. Pour Afficher les etudiants");
-        System.out.println("3. Pour supprimer etudiant");        
-        System.out.println("4. Retour au menu principale ");
+        System.out.println("3. Pour modifier etudiant");        
+        System.out.println("4. Pour supprimer etudiant");        
+        System.out.println("5. Retour au menu principale ");
         System.out.print("Votre choix: ");
     }
 
