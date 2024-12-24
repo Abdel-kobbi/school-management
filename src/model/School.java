@@ -1,11 +1,12 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class School {
     private static School school;
-    private ArrayList<Student> students = new ArrayList<>();
-    private ArrayList<Teacher> teachers = new ArrayList<>();
+    private List<Student> students = new ArrayList<>();
+    private List<Teacher> teachers = new ArrayList<>();
 
     // Utilisation de Design pattern : Singleton
     private School() {
@@ -18,7 +19,8 @@ public class School {
         return school;
     }
 
-    public ArrayList<Student> getStudents() {
+    // methods students
+    public List<Student> getStudents() {
         return students;
     }
 
@@ -27,13 +29,8 @@ public class School {
     }
 
     public void updateStudent(Student student, String name, int age) {
-        for (Student s : this.getStudents()) {
-            if (s.getId() == student.getId()) {
-                s.setNom(name);
-                s.setAge(age);
-                return;
-            }
-        }
+        student.setNom(name);
+        student.setAge(age);
     }
 
     public void removeStudent(Student student) {
@@ -41,17 +38,11 @@ public class School {
     }
 
     public Student searchStudent(int id) {
-        Student student = null;
-        for (Student s : school.getStudents()) {
-            if (s.getId() == id) {
-                student = s;
-                break;
-            }
-        }
-        return student;
+        return this.students.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
-    public ArrayList<Teacher> getTeachers() {
+    // Methods teacher
+    public List<Teacher> getTeachers() {
         return this.teachers;
     }
 
@@ -60,14 +51,9 @@ public class School {
     }
 
     public void updateTeacher(Teacher teacher, String name, int age, String module) {
-        for (Teacher t : this.getTeachers()) {
-            if (t.getId() == teacher.getId()) {
-                t.setNom(name);
-                t.setAge(age);
-                t.setModule(module);
-                return;
-            }
-        }
+        teacher.setNom(name);
+        teacher.setAge(age);
+        teacher.setModule(module);
     }
 
     public void removeTeacher(Teacher teacher) {
@@ -75,14 +61,7 @@ public class School {
     }
 
     public Teacher searchTeacher(int id) {
-        Teacher teacher = null;
-        for (Teacher t : school.getTeachers()) {
-            if (t.getId() == id) {
-                teacher =  t;
-                break;
-            }
-        }
-        return teacher;
+        return this.teachers.stream().filter(t -> t.getId() == id).findFirst().orElse(null);
     }
 
 }

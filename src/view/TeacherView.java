@@ -1,6 +1,6 @@
 package view;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import model.Teacher;
 
@@ -17,7 +17,7 @@ public class TeacherView {
     }
 
 
-    public void displayTeachers(ArrayList<Teacher> teachers){
+    public void displayTeachers(List<Teacher> teachers){
         System.out.println("----- Liste des Enseignant -----");
         for( Teacher t : teachers){
             System.out.println(t);

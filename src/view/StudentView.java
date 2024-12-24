@@ -1,6 +1,6 @@
 package view;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import model.Student;
 
@@ -16,7 +16,7 @@ public class StudentView {
         System.out.print("Votre choix: ");
     }
 
-    public void displayStudent(ArrayList<Student> students ){
+    public void displayStudent(List<Student> students ){
         System.out.println("---------- Liste des etudiants ---------");
         for(Student s : students){
             System.out.println(s);
