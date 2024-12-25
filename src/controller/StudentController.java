@@ -27,10 +27,10 @@ public class StudentController {
             entry = input.nextInt();
             switch (entry) {
                 case 1:
-                    System.out.println("Entre votre nom");
+                    System.out.print("Entre votre nom: ");
                     input.nextLine();
                     nom = input.nextLine();
-                    System.out.println("Entre votre age");
+                    System.out.print("Entre votre age: ");
                     age = input.nextInt();
                     this.school.addStudent(new Student(nom, age));
                     break;
@@ -43,12 +43,12 @@ public class StudentController {
                         System.err.println("Pas des étudiants");
                         break;
                     }
-                    System.out.println("choisi id de l'etudiant a modifier: ");
+                    System.out.print("choisi id de l'etudiant a modifier: ");
                     id = input.nextInt();
-                    System.out.println("Entre le nouveau nom");
+                    System.out.print("Entre le nouveau nom: ");
                     input.nextLine();
                     nom = input.nextLine();
-                    System.out.println("Entre le nouveau age");
+                    System.out.print("Entre le nouveau age: ");
                     age = input.nextInt();
                     this.school.updateStudent(this.school.searchStudent(id), nom, age);
                     break;
@@ -58,7 +58,7 @@ public class StudentController {
                         System.err.println("Pas des étudiants");
                         break;
                     }
-                    System.out.println("choisi id de l'etudiant supprimer: ");
+                    System.out.print("choisi id de l'etudiant supprimer: ");
                     id = input.nextInt();
                     this.school.removeStudent(this.school.searchStudent(id));
                 case 5:

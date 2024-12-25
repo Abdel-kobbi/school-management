@@ -33,7 +33,7 @@ public class Student {
     }
 
     public String toString() {
-        return "Id: " + this.getId() + ", Nom: " + this.getNom() + " Age: " + this.getAge() + " ans.";
+        return "Id: " + this.getId() + ", Nom: " + this.getNom() + ", Age: " + this.getAge() + " ans.";
     }
 
 }
