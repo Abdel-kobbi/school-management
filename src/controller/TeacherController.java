@@ -2,18 +2,19 @@ package controller;
 
 import java.util.Scanner;
 
-import model.School;
+import DAO.TeacherDAO;
 import model.Teacher;
 import view.TeacherView;
 
 public class TeacherController {
     private static Scanner input;
 
-    private TeacherView teacherView = new TeacherView();
-    private School school;
+    private TeacherView teacherView;
+    private TeacherDAO teacherDAO;
 
     public TeacherController() {
-        this.school = School.getSchool();
+        this.teacherDAO = new TeacherDAO();
+        teacherView = new TeacherView();
         input = new Scanner(System.in);
     }
 
@@ -45,43 +46,50 @@ public class TeacherController {
         input.nextLine();
         System.out.print("Entre votre module: ");
         module = input.nextLine();
-        this.school.addTeacher(new Teacher(nom, age, module));
+        this.teacherDAO.save(new Teacher(nom, age, module));
     }
 
     private void listOfTeachers() {
-        this.teacherView.displayTeachers(school.getTeachers());
+        this.teacherView.displayTeachers(this.teacherDAO.findAll());
     }
 
     private void editTeacher() {
         int id, age;
         String nom, module;
-        this.teacherView.displayTeachers(school.getTeachers());
-        if (school.getTeachers().size() == 0) {
+        this.listOfTeachers();
+        if (this.teacherDAO.findAll().size() == 0) {
             System.err.println("Pas des Enseignants");
             return;
         }
         System.out.print("Entre l'id de l'Enseignant a modifier: ");
         id = input.nextInt();
-        System.out.print("Entre le nouveau nom: ");
-        input.nextLine();
-        nom = input.nextLine();
-        System.out.print("Entre le nouveau age: ");
-        age = input.nextInt();
-        input.nextLine();
-        System.out.print("Entre le nouveau module: ");
-        module = input.nextLine();
-        this.school.updateTeacher(school.searchTeacher(id), nom, age, module);
+        Teacher teacher = this.teacherDAO.findById(id);
+        if (teacher != null) {
+            System.out.print("Entre le nouveau nom: ");
+            input.nextLine();
+            nom = input.nextLine();
+            System.out.print("Entre le nouveau age: ");
+            age = input.nextInt();
+            input.nextLine();
+            System.out.print("Entre le nouveau module: ");
+            module = input.nextLine();
+            teacher.setNom(nom);
+            teacher.setAge(age);
+            teacher.setModule(module);
+            this.teacherDAO.update(teacher);
+        }else{
+            System.err.println("Pas d'Enseignant pour cet ID.");
+        }
     }
 
     private void removeTeacher() {
         int id;
-        this.teacherView.displayTeachers(school.getTeachers());
-        if (school.getTeachers().size() == 0) {
-            System.err.println("Pas des Enseignants.");
+        this.listOfTeachers();
+        if (this.teacherDAO.findAll().size() == 0) {
             return;
         }
         System.out.print("Entre l'id de l'Enseignant a supprimer: ");
         id = input.nextInt();
-        this.school.removeTeacher(school.searchTeacher(id));
+        this.teacherDAO.delete(id);
     }
 }

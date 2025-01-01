@@ -1,20 +1,20 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class ClassSchool {
-    private static int idU = 0;
     private int id;
     private String className;
     private Teacher teacher;
-    private List<Student> students;
 
-    public ClassSchool(String className, Teacher teacher) {
-        this.id = ++idU;
+    public ClassSchool(int id, String className, Teacher teacher) {
+        this.id = id;
         this.className = className;
         this.teacher = teacher;
-        this.students = new ArrayList<>();
+    }
+
+    public ClassSchool(String className, Teacher teacher) {
+        this.className = className;
+        this.teacher = teacher;
     }
 
     // getters
@@ -30,15 +30,7 @@ public class ClassSchool {
         return this.teacher;
     }
 
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public int getNumberOfStudent(){
-        return this.students.size();
-    }
-
-    //setters
+    // setters
     public void setClassName(String className) {
         this.className = className;
     }
@@ -47,18 +39,9 @@ public class ClassSchool {
         this.teacher = teacher;
     }
 
-    public void addStudentToClass(Student student){
-        this.students.add(student);
-    }
-
-    public void removeStudentFromClass(Student student){
-        this.students.remove(student);
-    }
-
     public String toString() {
-        return "ID: " + this.getId() + ", Nom de la classe: " + this.className + 
-        ", L'Enseignant de la classe: " + this.getTeacher() + 
-        ", Le nombre des etudiants de la classe est:  " + this.getNumberOfStudent();
+        return "ID: " + this.getId() + ", Nom de la classe: " + this.className +
+                ", L'Enseignant de la classe: Mme/M " + this.getTeacher().getNom() + ".";
     }
 
 }

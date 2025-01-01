@@ -1,13 +1,16 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import DAO.ClasseDAO;
+import DAO.StudentDAO;
+import DAO.TeacherDAO;
 
 public class School {
     private static School school;
-    private List<Student> students = new ArrayList<>();
-    private List<Teacher> teachers = new ArrayList<>();
-    private List<ClassSchool> listClassSchool = new ArrayList<>();
+    private StudentDAO studentDAO = new StudentDAO();
+    private TeacherDAO teacherDAO = new TeacherDAO();
+    private ClasseDAO classeDAO = new ClasseDAO();
 
     // Utilisation de Design pattern : Singleton
     private School() {
@@ -22,64 +25,67 @@ public class School {
 
     // management students
     public List<Student> getStudents() {
-        return students;
+        return this.studentDAO.findAll();
     }
 
     public void addStudent(Student student) {
-        this.students.add(student);
+        this.studentDAO.save(student);
     }
 
     public void updateStudent(Student student, String name, int age) {
         student.setNom(name);
         student.setAge(age);
+        this.studentDAO.update(student);
     }
 
     public void removeStudent(Student student) {
-        this.students.remove(student);
+        this.studentDAO.delete(student.getId());
     }
 
     public Student searchStudent(int id) {
-        return this.students.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
+        return this.studentDAO.findById(id);
     }
 
     // management teacher
     public List<Teacher> getTeachers() {
-        return this.teachers;
+        return this.teacherDAO.findAll();
     }
 
     public void addTeacher(Teacher teacher) {
-        this.teachers.add(teacher);
+        this.teacherDAO.save(teacher);
     }
 
     public void updateTeacher(Teacher teacher, String name, int age, String module) {
         teacher.setNom(name);
         teacher.setAge(age);
         teacher.setModule(module);
+        this.teacherDAO.update(teacher);
     }
 
     public void removeTeacher(Teacher teacher) {
-        this.teachers.remove(teacher);
+        this.teacherDAO.delete(teacher.getId());
+        ;
     }
 
     public Teacher searchTeacher(int id) {
-        return this.teachers.stream().filter(t -> t.getId() == id).findFirst().orElse(null);
+        return this.teacherDAO.findById(id);
     }
 
     // management the classrooms
     public List<ClassSchool> getListClassRoom() {
-        return this.listClassSchool;
+        return this.classeDAO.findAll();
     }
 
     public void addClass(ClassSchool classSchool) {
-        this.listClassSchool.add(classSchool);
+        this.classeDAO.save(classSchool);
     }
 
-    public void removeClass(ClassSchool classSchool) {
-        this.listClassSchool.remove(classSchool);
+    public void removeClass(int id) {
+        this.classeDAO.delete(id);
     }
 
-    public ClassSchool searchClassRomm(int id){
-        return this.getListClassRoom().stream().filter(c -> c.getId() == id).findFirst().orElse(null);
+    public ClassSchool searchClassRomm(int id) {
+        return this.classeDAO.findById(id);
     }
 
 }

@@ -2,9 +2,9 @@ package controller;
 
 import java.util.Scanner;
 
+import DAO.ClasseDAO;
+import DAO.TeacherDAO;
 import model.ClassSchool;
-import model.School;
-import model.Student;
 import model.Teacher;
 import view.ClassSchoolView;
 import view.StudentView;
@@ -12,13 +12,15 @@ import view.TeacherView;
 
 public class ClassSchoolController {
     private static Scanner input;
-    private School school;
+    private ClasseDAO classeDAO;
+    private TeacherDAO teacherDAO;
     private ClassSchoolView classSchoolView;
     private TeacherView teacherView;
     private StudentView studentView;
 
     public ClassSchoolController() {
-        this.school = School.getSchool();
+        this.classeDAO = new ClasseDAO();
+        this.teacherDAO = new TeacherDAO();
         this.classSchoolView = new ClassSchoolView();
         this.teacherView = new TeacherView();
         this.studentView = new StudentView();
@@ -32,8 +34,8 @@ public class ClassSchoolController {
             entry = input.nextInt();
             switch (entry) {
                 case 1 -> this.addClass();
-                case 2 -> this.removeClass();
-                case 3 -> this.addStudentToClass();
+                case 2 -> this.editClass();
+                case 3 -> this.removeClass();
                 case 4 -> this.listClassRoom();
                 case 5 -> this.listStudentOfClass();
                 case 6 -> System.out.println("");
@@ -48,63 +50,65 @@ public class ClassSchoolController {
         System.out.print("Entre le nom de la classe: ");
         input.nextLine();
         nom = input.nextLine();
-        this.teacherView.displayTeachers(school.getTeachers());
-        System.out.print("choisi l'id d'Enseignant: ");
+        this.teacherView.displayTeachers(this.teacherDAO.findAll());
+        System.out.print("choisi l'id d'Enseignant responsable: ");
         id = input.nextInt();
-        Teacher teacher = school.searchTeacher(id);
+        Teacher teacher = this.teacherDAO.findById(id);
         if (teacher != null) {
-            this.school.addClass(new ClassSchool(nom, teacher));
+            this.classeDAO.save(new ClassSchool(nom, teacher));
         } else {
             System.out.println("Enseignant n'existe pas!");
         }
     }
 
-    private void removeClass() {
+    private void editClass() {
         int id;
-        this.classSchoolView.displayClassRoom(school.getListClassRoom());
-        System.out
-                .print("choisi l'id de la classe a supprimer: ");
+        String nom;
+        this.classSchoolView.displayClassRoom(this.classeDAO.findAll());
+        System.out.print("choisi l'id de la classe a modifier: ");
         id = input.nextInt();
-        ClassSchool classRoom = school.searchClassRomm(id);
-        if (classRoom != null) {
-            school.removeClass(classRoom);
-        } else {
-            System.out.println("La classe n'existe pas!");
-        }
-    }
-
-    private void addStudentToClass() {
-        this.classSchoolView.displayClassRoom(this.school.getListClassRoom());
-        System.out.print("choisi l'id de la classe pour ajouter des étudiants: ");
-        int classId = input.nextInt();
-        ClassSchool cSchool = this.school.searchClassRomm(classId);
-        if (cSchool != null) {
-            this.studentView.displayStudent(this.school.getStudents());
-            System.out.print("choisi l'id de l'etudiant pour ajouter a la classe " + cSchool.getClassName() + ": ");
-            int studentId = input.nextInt();
-            Student student = this.school.searchStudent(studentId);
-            if (student != null) {
-                cSchool.addStudentToClass(student);
+        ClassSchool classe = this.classeDAO.findById(id);
+        if (classe != null) {
+            System.out.print("Entre le nouveau nom de la classe: ");
+            input.nextLine();
+            nom = input.nextLine();
+            this.teacherView.displayTeachers(this.teacherDAO.findAll());
+            System.out.print("choisi l'id d'Enseignant responsable: ");
+            id = input.nextInt();
+            Teacher teacher = this.teacherDAO.findById(id);
+            if (teacher != null) {
+                classe.setClassName(nom);
+                classe.setTeacher(teacher);
+                this.classeDAO.update(classe);
             } else {
-                System.out.println("L'etudiant n'existe pas!");
+                System.out.println("Enseignant n'existe pas!");
             }
         } else {
             System.out.println("La classe n'existe pas!");
+
         }
     }
 
+    private void removeClass() {
+        int id;
+        this.classSchoolView.displayClassRoom(this.classeDAO.findAll());
+        System.out.print("choisi l'id de la classe a supprimer: ");
+        id = input.nextInt();
+        this.classeDAO.delete(id);
+    }
+
     private void listClassRoom() {
-        this.classSchoolView.displayClassRoom(this.school.getListClassRoom());
+        this.classSchoolView.displayClassRoom(this.classeDAO.findAll());
     }
 
     private void listStudentOfClass() {
         int id;
-        this.classSchoolView.displayClassRoom(this.school.getListClassRoom());
-        System.out.print("Choisi le classe pour lister ces etudiants: ");
+        this.classSchoolView.displayClassRoom(this.classeDAO.findAll());
+        System.out.print("Choisi id de la classe pour lister ces etudiants: ");
         id = input.nextInt();
-        ClassSchool classRomm = this.school.searchClassRomm(id);
+        ClassSchool classRomm = this.classeDAO.findById(id);
         if (classRomm != null) {
-            this.studentView.displayStudent(classRomm.getStudents());
+            this.studentView.displayStudent(this.classeDAO.getStudents(classRomm));
         } else {
             System.out.println("La classe n'existe pas!");
         }

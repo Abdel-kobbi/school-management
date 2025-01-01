@@ -2,12 +2,13 @@ package controller;
 
 import java.util.Scanner;
 
-import model.School;
+import DAO.ClasseDAO;
+import DAO.StudentDAO;
+import DAO.TeacherDAO;
 import view.MainView;
 
 public class MainController {
     private static Scanner input;
-    private School school;
     private MainView mainView;
     private StudentController studentController;
     private TeacherController teacherController;
@@ -15,7 +16,6 @@ public class MainController {
 
     public MainController() {
         input = new Scanner(System.in);
-        this.school = School.getSchool();
         this.mainView = new MainView();
         this.studentController = new StudentController();
         this.teacherController = new TeacherController();
@@ -54,8 +54,8 @@ public class MainController {
 
     private void detailsSchool() {
         this.mainView.displayInfoSchool(
-                school.getTeachers().size(),
-                school.getStudents().size(),
-                school.getListClassRoom().size());
+                new TeacherDAO().findAll().size(),
+                new StudentDAO().findAll().size(),
+                new ClasseDAO().findAll().size());
     }
 }
