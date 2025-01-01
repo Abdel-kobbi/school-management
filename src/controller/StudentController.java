@@ -2,20 +2,27 @@ package controller;
 
 import java.util.Scanner;
 
-import model.School;
+import DAO.ClasseDAO;
+import DAO.StudentDAO;
+import model.ClassSchool;
 import model.Student;
+import view.ClassSchoolView;
 import view.StudentView;
 
 public class StudentController {
 
     private static Scanner input;
 
-    private School school;
+    private StudentDAO studentDAO;
     private StudentView studentView;
+    private ClasseDAO classeDAO;
+    private ClassSchoolView classSchoolView;
 
     public StudentController() {
-        this.school = School.getSchool();
+        this.studentDAO = new StudentDAO();
         this.studentView = new StudentView();
+        this.classeDAO = new ClasseDAO();
+        this.classSchoolView = new ClassSchoolView();
         input = new Scanner(System.in);
     }
 
@@ -39,47 +46,72 @@ public class StudentController {
 
     private void addStudent() {
         String nom;
-        int age;
+        int age, classeId;
         System.out.print("Entre votre nom: ");
         input.nextLine();
         nom = input.nextLine();
         System.out.print("Entre votre age: ");
         age = input.nextInt();
-        this.school.addStudent(new Student(nom, age));
+        this.classSchoolView.displayClassRoom(this.classeDAO.findAll());
+        System.out.print("Choisi id de la classe: ");
+        classeId = input.nextInt();
+        ClassSchool classe = this.classeDAO.findById(classeId);
+        if (classe != null) {
+            this.studentDAO.save(new Student(nom, age, classe));
+        } else {
+            System.out.println("Aucun classe pour cet ID.");
+        }
     }
 
     private void listOfStudent() {
-        this.studentView.displayStudent(school.getStudents());
+        this.studentView.displayStudent(this.studentDAO.findAll());
     }
 
     private void editStudent() {
-        int id, age;
+        int id, age, classeId;
         String nom;
-        this.studentView.displayStudent(school.getStudents());
-        if (school.getStudents().size() == 0) {
+        this.listOfStudent();
+        if (this.studentDAO.findAll().size() == 0) {
             System.err.println("Pas des étudiants");
             return;
         }
         System.out.print("choisi id de l'etudiant a modifier: ");
         id = input.nextInt();
-        System.out.print("Entre le nouveau nom: ");
-        input.nextLine();
-        nom = input.nextLine();
-        System.out.print("Entre le nouveau age: ");
-        age = input.nextInt();
-        this.school.updateStudent(this.school.searchStudent(id), nom, age);
+        Student student = this.studentDAO.findById(id);
+        if (student != null) {
+            System.out.print("Entre le nouveau nom: ");
+            input.nextLine();
+            nom = input.nextLine();
+            System.out.print("Entre le nouveau age: ");
+            age = input.nextInt();
+            this.classSchoolView.displayClassRoom(this.classeDAO.findAll());
+            System.out.print("Choisi id de la classe: ");
+            classeId = input.nextInt();
+            ClassSchool classe = this.classeDAO.findById(classeId);
+            if (classe != null) {
+                student.setNom(nom);
+                student.setAge(age);
+                student.setClasse(classe);
+                this.studentDAO.update(student);
+            } else {
+                System.out.println("Aucun classe pour cet ID.");
+            }
+        } else {
+            System.out.println("Aucun étudiant(e) avec cet ID.");
+        }
+
     }
 
     private void removeStudent() {
         int id;
-        this.studentView.displayStudent(school.getStudents());
-        if (school.getStudents().size() == 0) {
+        this.listOfStudent();
+        if (this.studentDAO.findAll().size() == 0) {
             System.err.println("Pas des étudiants.");
             return;
         }
         System.out.print("choisi id de l'etudiant supprimer: ");
         id = input.nextInt();
-        this.school.removeStudent(this.school.searchStudent(id));
+        this.studentDAO.delete(id);
     }
 
 }
