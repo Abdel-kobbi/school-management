@@ -5,7 +5,7 @@ import java.util.List;
 public interface GenericDAO<T,ID> {
 
     // pour crée un nouvelle entité
-    void save(T entity);
+    boolean save(T entity);
     // pour trouver une entité identifier par id 
     T findById(ID id);
     // pour obtenier toutes les entités

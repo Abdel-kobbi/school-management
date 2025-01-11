@@ -23,7 +23,7 @@ public class ClassSchoolController {
         this.teacherDAO = new TeacherDAO();
         this.classSchoolView = new ClassSchoolView();
         this.teacherView = new TeacherView();
-        this.studentView = new StudentView();
+        this.studentView = new StudentView(this.classeDAO.findAll());
         input = new Scanner(System.in);
     }
 

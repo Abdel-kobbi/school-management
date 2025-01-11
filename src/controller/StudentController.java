@@ -1,6 +1,13 @@
 package controller;
 
+import java.util.List;
 import java.util.Scanner;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import DAO.ClasseDAO;
 import DAO.StudentDAO;
@@ -18,21 +25,46 @@ public class StudentController {
     private ClasseDAO classeDAO;
     private ClassSchoolView classSchoolView;
 
+    // Recuperation des TextFiled & Addbtn
+    private JTextField txtNom;
+    private JTextField txtAge;
+    private JButton addButton;
+    private JComboBox<ClassSchool> listClasses;
+
     public StudentController() {
         this.studentDAO = new StudentDAO();
-        this.studentView = new StudentView();
         this.classeDAO = new ClasseDAO();
+        this.studentView = new StudentView(this.classeDAO.findAll());
         this.classSchoolView = new ClassSchoolView();
         input = new Scanner(System.in);
+        this.addButton = studentView.getBtnAdd();
+        loadStudent();
+        this.addButton.addActionListener(e -> addStudent());
+    }
+
+    private void loadStudent() {
+        try {
+            DefaultTableModel tableModel = studentView.getTableModel();
+            List<Student> students = studentDAO.findAll();
+            tableModel.setRowCount(0);
+            for (Student student : students) {
+                tableModel.addRow(
+                        new Object[] { student.getId(), student.getNom(), student.getAge(), student.getClasse() });
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(studentView, e, "Erreur: " + e.getMessage(), JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void start() {
+        this.studentView.setVisible(true);
         int entry;
         do {
             this.studentView.displayStudentMenu();
             entry = input.nextInt();
             switch (entry) {
-                case 1 -> this.addStudent();
+                case 1 -> this.addStudent("V1");
                 case 2 -> this.listOfStudent();
                 case 3 -> this.editStudent();
                 case 4 -> this.removeStudent();
@@ -45,6 +77,54 @@ public class StudentController {
     }
 
     private void addStudent() {
+        try {
+            this.txtNom = this.studentView.getTxtNom();
+            this.txtAge = this.studentView.getTxtAge();
+            this.listClasses = this.studentView.getListClasses();
+            String valueNom = txtNom.getText();
+            String valueAge = txtAge.getText();
+            int age = 0;
+            ClassSchool valueClasse = (ClassSchool) listClasses.getSelectedItem();
+            if (valueNom.isEmpty()) {
+                throw new Exception("Le nom est nécessaire.");
+            }
+
+            if (valueAge.isEmpty()) {
+                throw new Exception("L'âge est nécessaire.");
+            } else if (!isInteger(valueAge) || parseInt(valueAge) <= 0) {
+                throw new Exception("L'âge doit être un nombre entier positive.");
+            } else {
+                age = parseInt(valueAge);
+            }
+
+            boolean isSave = this.studentDAO.save(new Student(valueNom, age, valueClasse));
+            if (isSave) {
+                JOptionPane.showMessageDialog(studentView, "L'étudiant a été ajouté avec succès.", "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+                this.txtNom.setText("");
+                this.txtAge.setText("");
+                this.listClasses.setSelectedIndex(0);
+                loadStudent();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(studentView, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private boolean isInteger(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private int parseInt(String value) {
+        return Integer.parseInt(value);
+    }
+
+    private void addStudent(String version) {
         String nom;
         int age, classeId;
         System.out.print("Entre votre nom: ");

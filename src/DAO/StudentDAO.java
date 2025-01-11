@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import database.ConenxionDb;
 import model.Student;
 
@@ -15,7 +17,7 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
     private static final Connection db = ConenxionDb.getDb();
 
     @Override
-    public void save(Student student) {
+    public boolean save(Student student) {
         String sql = "INSERT INTO students(nom, age, classe_id) values(?,?,?);";
         try {
             PreparedStatement stm = db.prepareStatement(sql);
@@ -25,12 +27,14 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
             int rowAffected = stm.executeUpdate();
             if (rowAffected > 0) {
                 System.out.println("L'étudiant a été ajouté avec succès.");
+                return true;
             }
             stm.close();
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             System.out.println("Error on save student : " + e.getMessage());
         }
-
+        return false;
     }
 
     @Override

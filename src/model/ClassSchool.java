@@ -1,6 +1,5 @@
 package model;
 
-
 public class ClassSchool {
     private int id;
     private String className;
@@ -40,8 +39,7 @@ public class ClassSchool {
     }
 
     public String toString() {
-        return "ID: " + this.getId() + ", Nom de la classe: " + this.className +
-                ", L'Enseignant de la classe: Mme/M " + this.getTeacher().getNom() + ".";
+        return this.getClassName().toUpperCase();
     }
 
 }

@@ -11,7 +11,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Integer> {
     private static final Connection db = ConenxionDb.getDb();
 
     @Override
-    public void save(Teacher teacher) {
+    public boolean save(Teacher teacher) {
         String sql = "INSERT INTO teachers(nom, age, module) values (?,?,?);";
         try {
             PreparedStatement stm = db.prepareStatement(sql);
@@ -21,12 +21,13 @@ public class TeacherDAO implements GenericDAO<Teacher, Integer> {
             int rowAffected = stm.executeUpdate();
             if (rowAffected > 0) {
                 System.out.println("L'Enseignants est ajouter avec succée.");
+                return true;
             }
             stm.close();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-
+        return false;
     }
 
     @Override
