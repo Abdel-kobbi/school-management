@@ -47,8 +47,7 @@ public class Teacher {
     }
 
     public String toString() {
-        return "ID: " + this.getId() + ", Nom: " + this.getNom() + ", Age: " + this.getAge() + " ans, Module: "
-                + this.getModule() + ".";
+        return this.getNom().toUpperCase();
     }
 
 }

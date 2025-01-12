@@ -70,10 +70,10 @@ public class TeacherController {
     }
 
     private void addTeacher() {
-        String nameValue = txtNom.getText();
-        String ageValue = txtAge.getText();
-        String moduleValue = txtModule.getText();
         try {
+            String nameValue = txtNom.getText();
+            String ageValue = txtAge.getText();
+            String moduleValue = txtModule.getText();
             if (nameValue.isEmpty()) {
                 throw new Exception("Le nom est nécessaire.");
             }

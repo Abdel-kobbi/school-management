@@ -84,7 +84,7 @@ public class StudentController {
         try {
             String valueNom = txtNom.getText();
             String valueAge = txtAge.getText();
-            ClassSchool valueClasse = (ClassSchool) listClasses.getSelectedItem();
+            ClassSchool classe = (ClassSchool) listClasses.getSelectedItem();
             if (valueNom.isEmpty()) {
                 throw new Exception("Le nom est nécessaire.");
             }
@@ -94,7 +94,7 @@ public class StudentController {
                 throw new Exception("L'âge doit être un nombre entier positive.");
             }
 
-            boolean isSave = this.studentDAO.save(new Student(valueNom, parseInt(valueAge), valueClasse));
+            boolean isSave = this.studentDAO.save(new Student(valueNom, parseInt(valueAge), classe));
             if (isSave) {
                 JOptionPane.showMessageDialog(studentView, "L'étudiant a été ajouté avec succès.", "Succès",
                         JOptionPane.INFORMATION_MESSAGE);
