@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import database.ConenxionDb;
 import model.Teacher;
 
@@ -20,12 +22,11 @@ public class TeacherDAO implements GenericDAO<Teacher, Integer> {
             stm.setString(3, teacher.getModule());
             int rowAffected = stm.executeUpdate();
             if (rowAffected > 0) {
-                System.out.println("L'Enseignants est ajouter avec succée.");
                 return true;
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }
@@ -47,7 +48,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return teacher;
     }
@@ -68,8 +69,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return teachers;
     }
@@ -89,7 +89,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Integer> {
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -108,7 +108,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Integer> {
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
 
     }

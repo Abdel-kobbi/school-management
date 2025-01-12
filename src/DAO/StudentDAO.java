@@ -26,13 +26,11 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
             stm.setInt(3, student.getClasse().getId());
             int rowAffected = stm.executeUpdate();
             if (rowAffected > 0) {
-                System.out.println("L'étudiant a été ajouté avec succès.");
                 return true;
             }
             stm.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
-            System.out.println("Error on save student : " + e.getMessage());
         }
         return false;
     }
@@ -54,7 +52,7 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return student;
     }
@@ -75,7 +73,7 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error on find all student: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return students;
     }
@@ -97,7 +95,7 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -115,7 +113,7 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 

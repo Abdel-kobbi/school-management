@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import database.ConenxionDb;
 import model.ClassSchool;
 import model.Student;
@@ -20,12 +22,11 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
             stm.setInt(2, classe.getTeacher().getId());
             int result = stm.executeUpdate();
             if (result > 0) {
-                System.out.println("La classe a été ajouté avec succès.");
                 return true;
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     };
@@ -46,7 +47,7 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error on findBy id class room: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return classeSchool;
     };
@@ -66,7 +67,7 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error on findAll class room: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return classes;
     };
@@ -87,7 +88,7 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
             }
             stm.close();
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     };
 
@@ -105,7 +106,7 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error on delete classe: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     };
 
@@ -125,12 +126,8 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error on get all student of classroom: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return students;
-    }
-
-    public int getNumberOfStudent(ClassSchool classe) {
-        return this.getStudents(classe).size();
     }
 }

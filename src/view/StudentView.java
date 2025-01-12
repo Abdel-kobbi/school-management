@@ -22,7 +22,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import model.ClassSchool;
-import model.Student;
 
 public class StudentView extends JFrame {
 
@@ -48,6 +47,7 @@ public class StudentView extends JFrame {
         this.setMinimumSize(new Dimension(800, 600));
         this.setLayout(new BorderLayout(20, 20));
         this.getContentPane().setBackground(MainView.backgroundColor);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Entête
         this.title = new JLabel("Gestion des Étudiants", JLabel.CENTER);
@@ -185,27 +185,5 @@ public class StudentView extends JFrame {
 
     public JTable getTableStudent() {
         return tableStudent;
-    }
-
-    public void displayStudentMenu() {
-        System.out.println("-------- Gestion des étudiants --------");
-        System.out.println("1. Pour ajouter etudiant");
-        System.out.println("2. Pour Afficher les etudiants");
-        System.out.println("3. Pour modifier etudiant");
-        System.out.println("4. Pour supprimer etudiant");
-        System.out.println("5. Retour au menu principale ");
-        System.out.print("Votre choix: ");
-    }
-
-    public void displayStudent(List<Student> students) {
-        System.out.println("---------- Liste des etudiants ---------");
-        if (students.size() > 0) {
-            for (Student s : students) {
-                System.out.println(s);
-            }
-        } else {
-            System.out.println("Pas des étudiant.");
-        }
-        System.out.println("---------- Fin Liste des etudiants ---------");
     }
 }
