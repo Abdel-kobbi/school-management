@@ -25,11 +25,12 @@ public class StudentController {
     private ClasseDAO classeDAO;
     private ClassSchoolView classSchoolView;
 
-    // Recuperation des TextFiled & Addbtn
+    // Recuperation des TextFiled & buttons
     private JTextField txtNom;
     private JTextField txtAge;
-    private JButton addButton;
     private JComboBox<ClassSchool> listClasses;
+    private JButton addButton;
+    private DefaultTableModel tableModel;
 
     public StudentController() {
         this.studentDAO = new StudentDAO();
@@ -37,28 +38,31 @@ public class StudentController {
         this.studentView = new StudentView(this.classeDAO.findAll());
         this.classSchoolView = new ClassSchoolView();
         input = new Scanner(System.in);
+        this.txtNom = this.studentView.getTxtNom();
+        this.txtAge = this.studentView.getTxtAge();
+        this.listClasses = this.studentView.getListClasses();
+        this.tableModel = studentView.getTableModel();
         this.addButton = studentView.getBtnAdd();
-        loadStudent();
-        this.addButton.addActionListener(e -> addStudent());
     }
 
     private void loadStudent() {
         try {
-            DefaultTableModel tableModel = studentView.getTableModel();
             List<Student> students = studentDAO.findAll();
-            tableModel.setRowCount(0);
+            tableModel.setRowCount(0); // vider le tableau
             for (Student student : students) {
                 tableModel.addRow(
                         new Object[] { student.getId(), student.getNom(), student.getAge(), student.getClasse() });
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(studentView, e, "Erreur: " + e.getMessage(), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(studentView, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public void start() {
         this.studentView.setVisible(true);
+        this.loadStudent();
+        this.addButton.addActionListener(e -> addStudent());
         int entry;
         do {
             this.studentView.displayStudentMenu();
@@ -78,26 +82,19 @@ public class StudentController {
 
     private void addStudent() {
         try {
-            this.txtNom = this.studentView.getTxtNom();
-            this.txtAge = this.studentView.getTxtAge();
-            this.listClasses = this.studentView.getListClasses();
             String valueNom = txtNom.getText();
             String valueAge = txtAge.getText();
-            int age = 0;
             ClassSchool valueClasse = (ClassSchool) listClasses.getSelectedItem();
             if (valueNom.isEmpty()) {
                 throw new Exception("Le nom est nécessaire.");
             }
-
             if (valueAge.isEmpty()) {
                 throw new Exception("L'âge est nécessaire.");
             } else if (!isInteger(valueAge) || parseInt(valueAge) <= 0) {
                 throw new Exception("L'âge doit être un nombre entier positive.");
-            } else {
-                age = parseInt(valueAge);
             }
 
-            boolean isSave = this.studentDAO.save(new Student(valueNom, age, valueClasse));
+            boolean isSave = this.studentDAO.save(new Student(valueNom, parseInt(valueAge), valueClasse));
             if (isSave) {
                 JOptionPane.showMessageDialog(studentView, "L'étudiant a été ajouté avec succès.", "Succès",
                         JOptionPane.INFORMATION_MESSAGE);

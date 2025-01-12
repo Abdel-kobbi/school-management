@@ -45,11 +45,12 @@ public class StudentView extends JFrame {
     public StudentView(List<ClassSchool> classSchools) {
         this.setTitle("Gestion des Étudiants");
         this.setSize(800, 600);
+        this.setMinimumSize(new Dimension(800, 600));
         this.setLayout(new BorderLayout(20, 20));
         this.getContentPane().setBackground(MainView.backgroundColor);
 
         // Entête
-        this.title = new JLabel("Gestion des Étudiant", JLabel.CENTER);
+        this.title = new JLabel("Gestion des Étudiants", JLabel.CENTER);
         this.title.setFont(new Font("Segoe UI", Font.BOLD, 24));
         this.title.setForeground(MainView.primaryColor);
         this.add(this.title, BorderLayout.NORTH);
@@ -126,7 +127,7 @@ public class StudentView extends JFrame {
         this.tableStudent.getTableHeader().setBackground(MainView.primaryColor);
         this.tableStudent.getTableHeader().setForeground(MainView.secondaryColor);
         this.tableStudent.setSelectionBackground(MainView.tableRowColor);
-        JScrollPane scrollPane = new JScrollPane(tableStudent);
+        JScrollPane scrollPane = new JScrollPane(this.tableStudent);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         this.add(scrollPane, BorderLayout.CENTER);
 
