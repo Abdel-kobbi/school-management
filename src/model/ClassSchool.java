@@ -38,8 +38,13 @@ public class ClassSchool {
         this.teacher = teacher;
     }
 
+    @Override
     public String toString() {
         return this.getClassName().toUpperCase();
     }
 
+    @Override // override this method for using in the JComboBox to setSelectedItem
+    public boolean equals(Object obj) {
+        return this.getId() == ((ClassSchool) obj).getId();
+    }
 }

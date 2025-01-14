@@ -46,8 +46,14 @@ public class Teacher {
         this.module = module;
     }
 
+    @Override
     public String toString() {
         return this.getNom().toUpperCase();
+    }
+
+    @Override // override this method for using in the JComboBox to setSelectedItem
+    public boolean equals(Object obj) {
+        return this.getId() == ((Teacher) obj).getId();
     }
 
 }

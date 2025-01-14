@@ -142,7 +142,7 @@ public class TeacherView extends JFrame {
         btnDelete.setEnabled(false);
 
         this.add(panelActions, BorderLayout.SOUTH);
-    }   
+    }
 
     public JTextField getTxtNom() {
         return txtNom;

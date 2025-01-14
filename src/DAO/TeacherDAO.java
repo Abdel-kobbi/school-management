@@ -75,7 +75,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Integer> {
     }
 
     @Override
-    public void update(Teacher teacher) {
+    public boolean update(Teacher teacher) {
         String sql = "UPDATE teachers set nom = ?, age = ?, module = ? WHERE id = ?;";
         try {
             PreparedStatement stm = db.prepareStatement(sql);
@@ -85,32 +85,30 @@ public class TeacherDAO implements GenericDAO<Teacher, Integer> {
             stm.setInt(4, teacher.getId());
             int result = stm.executeUpdate();
             if (result > 0) {
-                System.out.println("L'Enseignants a été modifier avec succès.");
+                return true;
             }
             stm.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
-
+        return false;
     }
 
     @Override
-    public void delete(Integer id) {
+    public boolean delete(Integer id) {
         String sql = "DELETE FROM teachers WHERE id = ?;";
         try {
             PreparedStatement stm = db.prepareStatement(sql);
             stm.setInt(1, id);
             int result = stm.executeUpdate();
             if (result > 0) {
-                System.out.println("L'Enseignants est supprimer avec succée.");
-            } else {
-                System.out.println("Aucun Enseignants trouver avec cet ID.");
+                return true;
             }
             stm.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
-
+        return true;
     }
 
 }
