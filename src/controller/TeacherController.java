@@ -83,7 +83,7 @@ public class TeacherController {
             }
             boolean isSave = this.teacherDAO.save(new Teacher(nameValue, parseInt(ageValue), moduleValue));
             if (isSave) {
-                JOptionPane.showMessageDialog(this.teacherView, "L'Enseignants est ajouter avec succée.", "Succès",
+                JOptionPane.showMessageDialog(this.teacherView, "L'Enseignant a été ajouter avec succée.", "Succès",
                         JOptionPane.INFORMATION_MESSAGE);
                 this.emptyForm();
                 loadTeachers();
@@ -139,13 +139,13 @@ public class TeacherController {
 
     private void deleteTeacher(int id) {
         int confirme = JOptionPane.showConfirmDialog(this.teacherView,
-                "Etes-vous sûr de vouloir supprimer cet Enseignants?", "Confirmation de suppression",
+                "Etes-vous sûr de vouloir supprimer cet Enseignant?", "Confirmation de suppression",
                 JOptionPane.YES_NO_OPTION);
 
         if (confirme == JOptionPane.YES_OPTION) {
             boolean isDeleted = this.teacherDAO.delete(id);
             if (isDeleted) {
-                JOptionPane.showMessageDialog(this.teacherView, "L'Enseignants a été supprimé avec succès.", "Succès",
+                JOptionPane.showMessageDialog(this.teacherView, "L'Enseignant a été supprimé avec succès.", "Succès",
                         JOptionPane.INFORMATION_MESSAGE);
                 this.loadTeachers();
             } else {
@@ -174,7 +174,7 @@ public class TeacherController {
             }
             boolean isSave = this.teacherDAO.update(new Teacher(id, nameValue, parseInt(ageValue), moduleValue));
             if (isSave) {
-                JOptionPane.showMessageDialog(this.teacherView, "L'Enseignants est ajouter avec succée.", "Succès",
+                JOptionPane.showMessageDialog(this.teacherView, "L'Enseignant a été modifier avec succée.", "Succès",
                         JOptionPane.INFORMATION_MESSAGE);
                 this.emptyForm();
                 loadTeachers();

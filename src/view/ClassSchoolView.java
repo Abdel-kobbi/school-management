@@ -29,7 +29,7 @@ public class ClassSchoolView extends JFrame {
     private JLabel nomLabel;
     private JTextField txtNom;
     private JLabel teacherLabel;
-    private JComboBox<Teacher> listTeaches;
+    private JComboBox<Teacher> listTeachers;
     private JButton btnAdd;
     private JButton btnNew;
     private JButton btnUpdate;
@@ -81,13 +81,13 @@ public class ClassSchoolView extends JFrame {
         gbc.gridy = 4;
         panelForm.add(this.teacherLabel, gbc);
 
-        this.listTeaches = new JComboBox<>(teachers.toArray(new Teacher[0]));
-        this.listTeaches.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        this.listTeachers = new JComboBox<>(teachers.toArray(new Teacher[0]));
+        this.listTeachers.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 4;
         gbc.weightx = 1.0;
-        panelForm.add(this.listTeaches, gbc);
+        panelForm.add(this.listTeachers, gbc);
 
         this.btnAdd = MainView.createModerButton("Ajouter", MainView.primaryColor, MainView.secondaryColor);
         gbc.gridx = 0;
@@ -132,10 +132,6 @@ public class ClassSchoolView extends JFrame {
         this.add(panelActions, BorderLayout.SOUTH);
     }
 
-    public ClassSchoolView() {
-
-    }
-
     public JTextField getTxtNom() {
         return txtNom;
     }
@@ -144,8 +140,8 @@ public class ClassSchoolView extends JFrame {
         return teacherLabel;
     }
 
-    public JComboBox<Teacher> getListTeaches() {
-        return listTeaches;
+    public JComboBox<Teacher> getListTeachers() {
+        return listTeachers;
     }
 
     public JButton getBtnAdd() {
