@@ -5,7 +5,6 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -23,7 +22,7 @@ import java.awt.Insets;
 
 import model.ClassSchool;
 
-public class StudentView extends JFrame {
+public class StudentView extends JPanel {
 
     private JPanel panelForm;
     private JLabel title;
@@ -42,12 +41,9 @@ public class StudentView extends JFrame {
     private JTable tableStudent;
 
     public StudentView(List<ClassSchool> classSchools) {
-        this.setTitle("Gestion des Étudiants");
         this.setSize(800, 600);
         this.setMinimumSize(new Dimension(800, 600));
         this.setLayout(new BorderLayout(20, 20));
-        this.getContentPane().setBackground(MainView.backgroundColor);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Entête
         this.title = new JLabel("Gestion des Étudiants", JLabel.CENTER);

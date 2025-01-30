@@ -2,7 +2,6 @@ package view;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,7 +17,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-public class TeacherView extends JFrame {
+public class TeacherView extends JPanel {
 
     private JLabel title;
     private JPanel panelForm;
@@ -36,11 +35,9 @@ public class TeacherView extends JFrame {
     private JButton btnDelete;
 
     public TeacherView() {
-        this.setTitle("Gestion des Enseignants");
         this.setSize(800, 600);
         this.setMinimumSize(new Dimension(800, 600));
         this.setLayout(new BorderLayout(20, 20));
-        this.getContentPane().setBackground(MainView.backgroundColor);
 
         // Entête
         this.title = new JLabel("Gestion des Enseignants", JLabel.CENTER);

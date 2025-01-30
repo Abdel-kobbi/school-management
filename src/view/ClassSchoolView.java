@@ -14,7 +14,6 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,7 +21,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class ClassSchoolView extends JFrame {
+public class ClassSchoolView extends JPanel {
 
     private JLabel title;
     private JPanel panelForm;
@@ -38,11 +37,9 @@ public class ClassSchoolView extends JFrame {
     private JTable tableClasses;
 
     public ClassSchoolView(List<Teacher> teachers) {
-        this.setTitle("Gestion des classes");
         this.setSize(800, 600);
         this.setMinimumSize(new Dimension(800, 600));
         this.setLayout(new BorderLayout(20, 20));
-        this.getContentPane().setBackground(MainView.backgroundColor);
 
         // Entête
         this.title = new JLabel("Gestion des classes", JLabel.CENTER);

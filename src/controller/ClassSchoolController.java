@@ -44,10 +44,6 @@ public class ClassSchoolController {
         this.updateButton = this.classSchoolView.getBtnUpdate();
         this.newButton = this.classSchoolView.getBtnNew();
         this.table = this.classSchoolView.getTableClasses();
-    }
-
-    public void start() {
-        this.classSchoolView.setVisible(true);
         this.loadClasses();
         this.addButton.addActionListener((e) -> addClass());
         this.table.getSelectionModel().addListSelectionListener(e -> this.enableDeleteAndUpdateBtn(e));
@@ -114,7 +110,7 @@ public class ClassSchoolController {
                 int id = (int) this.tableModel.getValueAt(selectedRows[0], 0);
                 String nom = (String) this.tableModel.getValueAt(selectedRows[0], 1);
                 Teacher teacher = (Teacher) this.table.getValueAt(selectedRows[0], 2);
-                
+
                 // Remplir les champs avec les données sélectionnées
                 this.txtNom.setText(nom);
                 this.listTeachers.setSelectedItem(teacher);
@@ -181,5 +177,9 @@ public class ClassSchoolController {
     private void emptyForm() {
         this.txtNom.setText("");
         this.listTeachers.setSelectedIndex(0);
+    }
+
+    public ClassSchoolView getClassSchoolView() {
+        return this.classSchoolView;
     }
 }

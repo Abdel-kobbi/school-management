@@ -43,10 +43,6 @@ public class TeacherController {
         this.updateButton = this.teacherView.getBtnUpdate();
         this.deleteButton = this.teacherView.getBtnDelete();
         this.newButton = this.teacherView.getBtnNew();
-    }
-
-    public void start() {
-        this.teacherView.setVisible(true);
         this.loadTeachers();
         this.addButton.addActionListener(e -> addTeacher());
         this.table.getSelectionModel().addListSelectionListener(e -> this.enableDeleteAndUpdateBtn(e));
@@ -209,5 +205,9 @@ public class TeacherController {
 
     private int parseInt(String ageValue) {
         return Integer.parseInt(ageValue);
+    }
+
+    public TeacherView getTeacherView() {
+        return this.teacherView;
     }
 }

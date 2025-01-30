@@ -47,6 +47,9 @@ public class StudentController {
         this.deleteButton = this.studentView.getBtnDelete();
         this.updateButton = this.studentView.getBtnUpdate();
         this.newButton = this.studentView.getBtnNew();
+        this.loadStudent();
+        this.addButton.addActionListener(e -> addStudent());
+        this.table.getSelectionModel().addListSelectionListener(e -> this.enableDeleteAndUpdateBtn(e));
     }
 
     private void loadStudent() {
@@ -61,13 +64,6 @@ public class StudentController {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(studentView, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    public void start() {
-        this.studentView.setVisible(true);
-        this.loadStudent();
-        this.addButton.addActionListener(e -> addStudent());
-        this.table.getSelectionModel().addListSelectionListener(e -> this.enableDeleteAndUpdateBtn(e));
     }
 
     private void addStudent() {
@@ -211,5 +207,9 @@ public class StudentController {
         this.txtNom.setText("");
         this.txtAge.setText("");
         this.listClasses.setSelectedIndex(0);
+    }
+
+    public StudentView getStudentView() {
+        return studentView;
     }
 }
