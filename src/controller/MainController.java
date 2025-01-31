@@ -15,13 +15,24 @@ public class MainController {
     public MainController() {
         this.mainView = new MainView();
         this.cardLayout = this.mainView.getCardLayout();
-        this.mainView.getStudentManagement().addActionListener(e -> showContent("studentManagement"));
-        this.mainView.getTeacherManagement().addActionListener(e -> showContent("teacherManagement"));
-        this.mainView.getClassesManagement().addActionListener(e -> showContent("classesManagement"));
-        this.mainView.getExitItem().addActionListener(e -> System.exit(0));
         this.studentController = new StudentController();
         this.teacherController = new TeacherController();
         this.classSchoolController = new ClassSchoolController();
+        this.mainView.getStudentManagement().addActionListener(e -> {
+            this.studentController.addClassesToComboBox();
+            this.studentController.enableAddNewStudent();
+            showContent("studentManagement");
+        });
+        this.mainView.getTeacherManagement().addActionListener(e -> {
+            this.teacherController.enableAddNewTeacher();
+            showContent("teacherManagement");
+        });
+        this.mainView.getClassesManagement().addActionListener(e -> {
+            this.classSchoolController.addTeacherToComboBox();
+            this.classSchoolController.enableAddNewClasse();
+            showContent("classesManagement");
+        });
+        this.mainView.getExitItem().addActionListener(e -> System.exit(0));
     }
 
     private void showContent(String name) {

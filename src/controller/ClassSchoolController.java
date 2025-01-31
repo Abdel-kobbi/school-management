@@ -3,6 +3,7 @@ package controller;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -35,7 +36,7 @@ public class ClassSchoolController {
     public ClassSchoolController() {
         this.classeDAO = new ClasseDAO();
         this.teacherDAO = new TeacherDAO();
-        this.classSchoolView = new ClassSchoolView(this.teacherDAO.findAll());
+        this.classSchoolView = new ClassSchoolView();
         this.txtNom = this.classSchoolView.getTxtNom();
         this.listTeachers = this.classSchoolView.getListTeachers();
         this.addButton = this.classSchoolView.getBtnAdd();
@@ -44,9 +45,18 @@ public class ClassSchoolController {
         this.updateButton = this.classSchoolView.getBtnUpdate();
         this.newButton = this.classSchoolView.getBtnNew();
         this.table = this.classSchoolView.getTableClasses();
+        this.addTeacherToComboBox();
         this.loadClasses();
         this.addButton.addActionListener((e) -> addClass());
         this.table.getSelectionModel().addListSelectionListener(e -> this.enableDeleteAndUpdateBtn(e));
+    }
+
+    public void addTeacherToComboBox() {
+        // for update the compoBox
+        this.listTeachers.setModel(new DefaultComboBoxModel<>());
+        for (Teacher teacher : this.teacherDAO.findAll()) {
+            this.listTeachers.addItem(teacher);
+        }
     }
 
     private void loadClasses() {
@@ -165,13 +175,15 @@ public class ClassSchoolController {
         }
     }
 
-    private void enableAddNewClasse() {
+    public void enableAddNewClasse() {
         this.updateButton.setEnabled(false);
         this.deleteButton.setEnabled(false);
         this.newButton.setEnabled(false);
         this.addButton.setEnabled(true);
         // Réinitialiser les champs du formulaire
         this.emptyForm();
+        // Désélectionné la liste
+        this.table.clearSelection();
     }
 
     private void emptyForm() {

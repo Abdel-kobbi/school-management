@@ -180,12 +180,14 @@ public class TeacherController {
         }
     }
 
-    private void enableAddNewTeacher() {
+    public void enableAddNewTeacher() {
         this.updateButton.setEnabled(false);
         this.deleteButton.setEnabled(false);
         this.newButton.setEnabled(false);
         this.addButton.setEnabled(true);
         this.emptyForm();
+        // Désélectionné la liste
+        this.table.clearSelection();
     }
 
     private void emptyForm() {

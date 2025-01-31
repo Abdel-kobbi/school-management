@@ -2,7 +2,6 @@ package view;
 
 import model.Teacher;
 
-import java.util.List;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -36,7 +35,7 @@ public class ClassSchoolView extends JPanel {
     private DefaultTableModel tableModel;
     private JTable tableClasses;
 
-    public ClassSchoolView(List<Teacher> teachers) {
+    public ClassSchoolView() {
         this.setSize(800, 600);
         this.setMinimumSize(new Dimension(800, 600));
         this.setLayout(new BorderLayout(20, 20));
@@ -78,7 +77,7 @@ public class ClassSchoolView extends JPanel {
         gbc.gridy = 4;
         panelForm.add(this.teacherLabel, gbc);
 
-        this.listTeachers = new JComboBox<>(teachers.toArray(new Teacher[0]));
+        this.listTeachers = new JComboBox<>();
         this.listTeachers.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         gbc.gridx = 0;
         gbc.gridy = 5;

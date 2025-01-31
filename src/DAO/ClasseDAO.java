@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 
 import database.ConenxionDb;
 import model.ClassSchool;
-import model.Student;
 
 public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
     private static final Connection db = ConenxionDb.getDb();
@@ -107,25 +106,4 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
         }
         return false;
     };
-
-    public List<Student> getStudents(ClassSchool classe) {
-        String sql = "SELECT * FROM students WHERE classe_id = ?;";
-        List<Student> students = new ArrayList<>();
-        try {
-            PreparedStatement stm = db.prepareStatement(sql);
-            stm.setInt(1, classe.getId());
-            ResultSet result = stm.executeQuery();
-            while (result.next()) {
-                students.add(new Student(result.getInt("id"),
-                        result.getString("nom"),
-                        result.getInt("age"),
-                        new ClasseDAO().findById(result.getInt("classe_id"))));
-            }
-            stm.close();
-            result.close();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
-        }
-        return students;
-    }
 }

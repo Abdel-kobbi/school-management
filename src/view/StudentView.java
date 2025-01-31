@@ -1,7 +1,5 @@
 package view;
 
-import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -40,7 +38,7 @@ public class StudentView extends JPanel {
     private DefaultTableModel tableModel;
     private JTable tableStudent;
 
-    public StudentView(List<ClassSchool> classSchools) {
+    public StudentView() {
         this.setSize(800, 600);
         this.setMinimumSize(new Dimension(800, 600));
         this.setLayout(new BorderLayout(20, 20));
@@ -96,7 +94,7 @@ public class StudentView extends JPanel {
         gbc.gridy = 4;
         panelForm.add(this.classeLabel, gbc);
 
-        this.listClasses = new JComboBox<>(classSchools.toArray(new ClassSchool[0]));
+        this.listClasses = new JComboBox<>();
         this.listClasses.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         gbc.gridx = 0;
         gbc.gridy = 5;

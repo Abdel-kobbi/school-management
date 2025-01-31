@@ -108,7 +108,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Integer> {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
-        return true;
+        return false;
     }
 
 }

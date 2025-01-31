@@ -35,10 +35,14 @@ public class MainView extends JFrame {
     private JPanel mainPanel;
 
     public MainView() {
+
+        // add splach screen before start the app
+        new SplashScreen().splashScreen();
         this.setTitle("Gestion d'école");
         this.setSize(800, 600);
         this.setMinimumSize(new Dimension(800, 600));
         this.getContentPane().setBackground(MainView.backgroundColor);
+        this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // add icon

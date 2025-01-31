@@ -3,6 +3,7 @@ package controller;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -37,7 +38,7 @@ public class StudentController {
     public StudentController() {
         this.studentDAO = new StudentDAO();
         this.classeDAO = new ClasseDAO();
-        this.studentView = new StudentView(this.classeDAO.findAll());
+        this.studentView = new StudentView();
         this.txtNom = this.studentView.getTxtNom();
         this.txtAge = this.studentView.getTxtAge();
         this.listClasses = this.studentView.getListClasses();
@@ -47,9 +48,18 @@ public class StudentController {
         this.deleteButton = this.studentView.getBtnDelete();
         this.updateButton = this.studentView.getBtnUpdate();
         this.newButton = this.studentView.getBtnNew();
+        this.addClassesToComboBox();
         this.loadStudent();
         this.addButton.addActionListener(e -> addStudent());
         this.table.getSelectionModel().addListSelectionListener(e -> this.enableDeleteAndUpdateBtn(e));
+    }
+
+    public void addClassesToComboBox() {
+        // for update the compoBox
+        this.listClasses.setModel(new DefaultComboBoxModel<>());
+        for (ClassSchool classe :this.classeDAO.findAll()) {
+            this.listClasses.addItem(classe);
+        }
     }
 
     private void loadStudent() {
@@ -181,13 +191,15 @@ public class StudentController {
         }
     }
 
-    private void enableAddNewStudent() {
+    public void enableAddNewStudent() {
         this.updateButton.setEnabled(false);
         this.deleteButton.setEnabled(false);
         this.newButton.setEnabled(false);
         this.addButton.setEnabled(true);
         // Réinitialiser les champs du formulaire
         this.emptyForm();
+        // Désélectionné la liste
+        this.table.clearSelection();
     }
 
     private boolean isInteger(String value) {
