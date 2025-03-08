@@ -4,15 +4,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import database.ConenxionDb;
 import model.ClassSchool;
-import model.Student;
 
 public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
     private static final Connection db = ConenxionDb.getDb();
 
     @Override
-    public void save(ClassSchool classe) {
+    public boolean save(ClassSchool classe) {
         String sql = "INSERT INTO classes (nom, teacher_id) VALUES (?,?);";
         try {
             PreparedStatement stm = db.prepareStatement(sql);
@@ -20,12 +21,13 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
             stm.setInt(2, classe.getTeacher().getId());
             int result = stm.executeUpdate();
             if (result > 0) {
-                System.out.println("La classe a été ajouté avec succès.");
+                return true;
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
+        return false;
     };
 
     @Override
@@ -44,7 +46,7 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error on findBy id class room: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return classeSchool;
     };
@@ -64,13 +66,13 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error on findAll class room: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return classes;
     };
 
     @Override
-    public void update(ClassSchool classe) {
+    public boolean update(ClassSchool classe) {
         String sql = "UPDATE classes set nom = ?, teacher_id = ? WHERE id = ?;";
         try {
             PreparedStatement stm = db.prepareStatement(sql);
@@ -79,56 +81,29 @@ public class ClasseDAO implements GenericDAO<ClassSchool, Integer> {
             stm.setInt(3, classe.getId());
             int result = stm.executeUpdate();
             if (result > 0) {
-                System.out.println("La classe est modifier avec succée.");
-            } else {
-                System.out.println("Aucun classe trouver avec cet ID.");
+                return true;
             }
             stm.close();
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
+        return false;
     };
 
     @Override
-    public void delete(Integer id) {
+    public boolean delete(Integer id) {
         String sql = "DELETE FROM classes WHERE id = ?;";
         try {
             PreparedStatement stm = db.prepareStatement(sql);
             stm.setInt(1, id);
             int result = stm.executeUpdate();
             if (result > 0) {
-                System.out.println("La classe est supprimer avec succée.");
-            } else {
-                System.out.println("Aucun classe trouver avec cet ID.");
+                return true;
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error on delete classe: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
+        return false;
     };
-
-    public List<Student> getStudents(ClassSchool classe) {
-        String sql = "SELECT * FROM students WHERE classe_id = ?;";
-        List<Student> students = new ArrayList<>();
-        try {
-            PreparedStatement stm = db.prepareStatement(sql);
-            stm.setInt(1, classe.getId());
-            ResultSet result = stm.executeQuery();
-            while (result.next()) {
-                students.add(new Student(result.getInt("id"),
-                        result.getString("nom"),
-                        result.getInt("age"),
-                        new ClasseDAO().findById(result.getInt("classe_id"))));
-            }
-            stm.close();
-            result.close();
-        } catch (SQLException e) {
-            System.out.println("Error on get all student of classroom: " + e.getMessage());
-        }
-        return students;
-    }
-
-    public int getNumberOfStudent(ClassSchool classe) {
-        return this.getStudents(classe).size();
-    }
 }

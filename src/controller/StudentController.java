@@ -1,117 +1,227 @@
 package controller;
 
-import java.util.Scanner;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableModel;
 
 import DAO.ClasseDAO;
 import DAO.StudentDAO;
 import model.ClassSchool;
 import model.Student;
-import view.ClassSchoolView;
 import view.StudentView;
 
 public class StudentController {
 
-    private static Scanner input;
-
     private StudentDAO studentDAO;
     private StudentView studentView;
     private ClasseDAO classeDAO;
-    private ClassSchoolView classSchoolView;
+
+    // Recuperation des TextFiled & buttons
+    private JTextField txtNom;
+    private JTextField txtAge;
+    private JComboBox<ClassSchool> listClasses;
+    private JButton addButton;
+    private JButton deleteButton;
+    private JButton updateButton;
+    private JButton newButton;
+    private DefaultTableModel tableModel;
+    private JTable table;
 
     public StudentController() {
         this.studentDAO = new StudentDAO();
-        this.studentView = new StudentView();
         this.classeDAO = new ClasseDAO();
-        this.classSchoolView = new ClassSchoolView();
-        input = new Scanner(System.in);
+        this.studentView = new StudentView();
+        this.txtNom = this.studentView.getTxtNom();
+        this.txtAge = this.studentView.getTxtAge();
+        this.listClasses = this.studentView.getListClasses();
+        this.tableModel = this.studentView.getTableModel();
+        this.addButton = this.studentView.getBtnAdd();
+        this.table = this.studentView.getTableStudent();
+        this.deleteButton = this.studentView.getBtnDelete();
+        this.updateButton = this.studentView.getBtnUpdate();
+        this.newButton = this.studentView.getBtnNew();
+        this.addClassesToComboBox();
+        this.loadStudent();
+        this.addButton.addActionListener(e -> addStudent());
+        this.table.getSelectionModel().addListSelectionListener(e -> this.enableDeleteAndUpdateBtn(e));
     }
 
-    public void start() {
-        int entry;
-        do {
-            this.studentView.displayStudentMenu();
-            entry = input.nextInt();
-            switch (entry) {
-                case 1 -> this.addStudent();
-                case 2 -> this.listOfStudent();
-                case 3 -> this.editStudent();
-                case 4 -> this.removeStudent();
-                case 5 -> System.out.println("");
-                default -> System.out.println("Choix invalide!");
+    public void addClassesToComboBox() {
+        // for update the compoBox
+        this.listClasses.setModel(new DefaultComboBoxModel<>());
+        for (ClassSchool classe :this.classeDAO.findAll()) {
+            this.listClasses.addItem(classe);
+        }
+    }
 
+    private void loadStudent() {
+        try {
+            List<Student> students = studentDAO.findAll();
+            tableModel.setRowCount(0); // vider le tableau
+            for (Student student : students) {
+                tableModel.addRow(
+                        new Object[] { student.getId(), student.getNom(), student.getAge(), student.getClasse() });
             }
-        } while (entry != 5);
 
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(studentView, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void addStudent() {
-        String nom;
-        int age, classeId;
-        System.out.print("Entre votre nom: ");
-        input.nextLine();
-        nom = input.nextLine();
-        System.out.print("Entre votre age: ");
-        age = input.nextInt();
-        this.classSchoolView.displayClassRoom(this.classeDAO.findAll());
-        System.out.print("Choisi id de la classe: ");
-        classeId = input.nextInt();
-        ClassSchool classe = this.classeDAO.findById(classeId);
-        if (classe != null) {
-            this.studentDAO.save(new Student(nom, age, classe));
-        } else {
-            System.out.println("Aucun classe pour cet ID.");
-        }
-    }
-
-    private void listOfStudent() {
-        this.studentView.displayStudent(this.studentDAO.findAll());
-    }
-
-    private void editStudent() {
-        int id, age, classeId;
-        String nom;
-        this.listOfStudent();
-        if (this.studentDAO.findAll().size() == 0) {
-            System.err.println("Pas des étudiants");
-            return;
-        }
-        System.out.print("choisi id de l'etudiant a modifier: ");
-        id = input.nextInt();
-        Student student = this.studentDAO.findById(id);
-        if (student != null) {
-            System.out.print("Entre le nouveau nom: ");
-            input.nextLine();
-            nom = input.nextLine();
-            System.out.print("Entre le nouveau age: ");
-            age = input.nextInt();
-            this.classSchoolView.displayClassRoom(this.classeDAO.findAll());
-            System.out.print("Choisi id de la classe: ");
-            classeId = input.nextInt();
-            ClassSchool classe = this.classeDAO.findById(classeId);
-            if (classe != null) {
-                student.setNom(nom);
-                student.setAge(age);
-                student.setClasse(classe);
-                this.studentDAO.update(student);
-            } else {
-                System.out.println("Aucun classe pour cet ID.");
+        try {
+            String valueNom = txtNom.getText();
+            String valueAge = txtAge.getText();
+            ClassSchool classe = (ClassSchool) listClasses.getSelectedItem();
+            if (valueNom.isEmpty()) {
+                throw new Exception("Le nom est nécessaire.");
             }
-        } else {
-            System.out.println("Aucun étudiant(e) avec cet ID.");
-        }
+            if (valueAge.isEmpty()) {
+                throw new Exception("L'âge est nécessaire.");
+            } else if (!isInteger(valueAge) || parseInt(valueAge) <= 0) {
+                throw new Exception("L'âge doit être un nombre entier positive.");
+            }
 
+            boolean isSave = this.studentDAO.save(new Student(valueNom, parseInt(valueAge), classe));
+            if (isSave) {
+                JOptionPane.showMessageDialog(studentView, "L'étudiant a été ajouté avec succès.", "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+                this.emptyForm();
+                loadStudent();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(studentView, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    private void removeStudent() {
-        int id;
-        this.listOfStudent();
-        if (this.studentDAO.findAll().size() == 0) {
-            System.err.println("Pas des étudiants.");
-            return;
+    private void enableDeleteAndUpdateBtn(ListSelectionEvent e) {
+
+        // Supprimer les listeners du bouton de suppression
+        for (ActionListener al : this.deleteButton.getActionListeners()) {
+            this.deleteButton.removeActionListener(al);
         }
-        System.out.print("choisi id de l'etudiant supprimer: ");
-        id = input.nextInt();
-        this.studentDAO.delete(id);
+
+        // Supprimer les listeners du bouton de modification
+        for (ActionListener al : this.updateButton.getActionListeners()) {
+            this.updateButton.removeActionListener(al);
+        }
+
+        if (!e.getValueIsAdjusting()) { // Éviter les événements multiples
+            int[] selectedRows = table.getSelectedRows(); // Obtenir les lignes sélectionnées
+
+            if (selectedRows.length == 1) { // Une seule ligne sélectionnée
+                this.deleteButton.setEnabled(true);
+                this.updateButton.setEnabled(true);
+                this.newButton.setEnabled(true);
+                this.addButton.setEnabled(false);
+
+                // Récupérer les données de la ligne sélectionnée
+                int id = (int) this.table.getValueAt(selectedRows[0], 0);
+                String nom = (String) this.tableModel.getValueAt(selectedRows[0], 1);
+                int age = (int) this.tableModel.getValueAt(selectedRows[0], 2);
+                ClassSchool classe = (ClassSchool) this.tableModel.getValueAt(selectedRows[0], 3);
+
+                // Remplir les champs avec les données sélectionnées
+                this.txtNom.setText(nom);
+                this.txtAge.setText(String.valueOf(age));
+                this.listClasses.setSelectedItem(classe);
+
+                // Ajouter le nouveau listener pour la suppression
+                this.deleteButton.addActionListener(event -> this.deleteStudent(id));
+                // Ajouter le nouveau listener pour la modification
+                this.updateButton.addActionListener(event -> this.updateStudent(id));
+                // Ajouter le nouveau listener pour la nouveau étudiant
+                this.newButton.addActionListener(event -> this.enableAddNewStudent());
+            } else { // Aucune ou plusieurs lignes sélectionnées
+                this.enableAddNewStudent();
+            }
+        }
     }
 
+    private void deleteStudent(int id) {
+        int confirme = JOptionPane.showConfirmDialog(this.studentView,
+                "Etes-vous sûr de vouloir supprimer cet étudiant?", "Confirmation de suppression",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirme == JOptionPane.YES_OPTION) {
+            boolean isDeleted = this.studentDAO.delete(id);
+            if (isDeleted) {
+                JOptionPane.showMessageDialog(this.studentView, "L'étudiant a été supprimé avec succès.", "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+                this.loadStudent();
+            } else {
+                JOptionPane.showMessageDialog(this.studentView,
+                        "Une erreur est survenue, merci de réessayer plus tard.", "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void updateStudent(int id) {
+        try {
+            String valueNom = txtNom.getText();
+            String valueAge = txtAge.getText();
+            ClassSchool classe = (ClassSchool) listClasses.getSelectedItem();
+            if (valueNom.isEmpty()) {
+                throw new Exception("Le nom est nécessaire.");
+            }
+            if (valueAge.isEmpty()) {
+                throw new Exception("L'âge est nécessaire.");
+            } else if (!isInteger(valueAge) || parseInt(valueAge) <= 0) {
+                throw new Exception("L'âge doit être un nombre entier positive.");
+            }
+
+            boolean isUpdated = this.studentDAO.update(new Student(id, valueNom, parseInt(valueAge), classe));
+            if (isUpdated) {
+                JOptionPane.showMessageDialog(studentView, "L'étudiant a été modifier avec succès.", "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+                this.emptyForm();
+                loadStudent();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(studentView, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void enableAddNewStudent() {
+        this.updateButton.setEnabled(false);
+        this.deleteButton.setEnabled(false);
+        this.newButton.setEnabled(false);
+        this.addButton.setEnabled(true);
+        // Réinitialiser les champs du formulaire
+        this.emptyForm();
+        // Désélectionné la liste
+        this.table.clearSelection();
+    }
+
+    private boolean isInteger(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private int parseInt(String value) {
+        return Integer.parseInt(value);
+    }
+
+    private void emptyForm() {
+        this.txtNom.setText("");
+        this.txtAge.setText("");
+        this.listClasses.setSelectedIndex(0);
+    }
+
+    public StudentView getStudentView() {
+        return studentView;
+    }
 }

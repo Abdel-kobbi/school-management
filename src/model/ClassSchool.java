@@ -1,6 +1,5 @@
 package model;
 
-
 public class ClassSchool {
     private int id;
     private String className;
@@ -39,9 +38,13 @@ public class ClassSchool {
         this.teacher = teacher;
     }
 
+    @Override
     public String toString() {
-        return "ID: " + this.getId() + ", Nom de la classe: " + this.className +
-                ", L'Enseignant de la classe: Mme/M " + this.getTeacher().getNom() + ".";
+        return this.getClassName().toUpperCase();
     }
 
+    @Override // override this method for using in the JComboBox to setSelectedItem
+    public boolean equals(Object obj) {
+        return this.getId() == ((ClassSchool) obj).getId();
+    }
 }

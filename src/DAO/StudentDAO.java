@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import database.ConenxionDb;
 import model.Student;
 
@@ -15,7 +17,7 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
     private static final Connection db = ConenxionDb.getDb();
 
     @Override
-    public void save(Student student) {
+    public boolean save(Student student) {
         String sql = "INSERT INTO students(nom, age, classe_id) values(?,?,?);";
         try {
             PreparedStatement stm = db.prepareStatement(sql);
@@ -24,13 +26,13 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
             stm.setInt(3, student.getClasse().getId());
             int rowAffected = stm.executeUpdate();
             if (rowAffected > 0) {
-                System.out.println("L'étudiant a été ajouté avec succès.");
+                return true;
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error on save student : " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
-
+        return false;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return student;
     }
@@ -71,13 +73,13 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
             stm.close();
             result.close();
         } catch (SQLException e) {
-            System.out.println("Error on find all student: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return students;
     }
 
     @Override
-    public void update(Student student) {
+    public boolean update(Student student) {
         String sql = "UPDATE students SET nom = ?, age = ?, classe_id = ? WHERE id = ?;";
         try {
             PreparedStatement stm = db.prepareStatement(sql);
@@ -87,32 +89,30 @@ public class StudentDAO implements GenericDAO<Student, Integer> {
             stm.setInt(4, student.getId());
             int rowAffected = stm.executeUpdate();
             if (rowAffected > 0) {
-                System.out.println("L'édudiant est modifier avec succée.");
-            } else {
-                System.out.println("Aucun édudiant trouver avec cet ID.");
+                return true;
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
+        return false;
     }
 
     @Override
-    public void delete(Integer id) {
+    public boolean delete(Integer id) {
         String sql = "DELETE FROM students WHERE id = ?;";
         try {
             PreparedStatement stm = db.prepareStatement(sql);
             stm.setInt(1, id);
             int rowAffected = stm.executeUpdate();
             if (rowAffected > 0) {
-                System.out.println("L'édudiant est supprimer avec succée.");
-            } else {
-                System.out.println("Aucun édudiant trouver avec cet ID.");
+                return true;
             }
             stm.close();
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
+        return false;
     }
 
 }

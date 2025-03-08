@@ -1,95 +1,215 @@
 package controller;
 
-import java.util.Scanner;
+import java.util.List;
+
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableModel;
 
 import DAO.TeacherDAO;
 import model.Teacher;
 import view.TeacherView;
 
 public class TeacherController {
-    private static Scanner input;
 
     private TeacherView teacherView;
     private TeacherDAO teacherDAO;
 
+    // Recuperation des TextFiled & buttons
+    private JTextField txtNom;
+    private JTextField txtAge;
+    private JTextField txtModule;
+    private JButton addButton;
+    private DefaultTableModel tableModel;
+    private JButton newButton;
+    private JButton updateButton;
+    private JButton deleteButton;
+    private JTable table;
+
     public TeacherController() {
         this.teacherDAO = new TeacherDAO();
-        teacherView = new TeacherView();
-        input = new Scanner(System.in);
+        this.teacherView = new TeacherView();
+        this.txtNom = this.teacherView.getTxtNom();
+        this.txtAge = this.teacherView.getTxtAge();
+        this.txtModule = this.teacherView.getTxtModule();
+        this.addButton = this.teacherView.getBtnAdd();
+        this.tableModel = this.teacherView.getTableModel();
+        this.table = this.teacherView.getTableTeacher();
+        this.updateButton = this.teacherView.getBtnUpdate();
+        this.deleteButton = this.teacherView.getBtnDelete();
+        this.newButton = this.teacherView.getBtnNew();
+        this.loadTeachers();
+        this.addButton.addActionListener(e -> addTeacher());
+        this.table.getSelectionModel().addListSelectionListener(e -> this.enableDeleteAndUpdateBtn(e));
     }
 
-    public void start() {
-        int entry;
-        do {
-            this.teacherView.displayTeacherMenu();
-            entry = input.nextInt();
-            switch (entry) {
-                case 1 -> this.addTeacher();
-                case 2 -> this.listOfTeachers();
-                case 3 -> this.editTeacher();
-                case 4 -> this.removeTeacher();
-                case 5 -> System.out.println("");
-                default -> System.out.println("Choix invalide!");
+    private void loadTeachers() {
+        try {
+            List<Teacher> teachers = this.teacherDAO.findAll();
+            this.tableModel.setRowCount(0); // vider le tableau
+            for (Teacher teacher : teachers) {
+                this.tableModel.addRow(
+                        new Object[] { teacher.getId(), teacher.getNom(), teacher.getAge(), teacher.getModule() });
             }
-
-        } while (entry != 5);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this.teacherView, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void addTeacher() {
-        String nom, module;
-        int age;
-        System.out.print("Entre votre nom: ");
-        input.nextLine();
-        nom = input.nextLine();
-        System.out.print("Entre votre age: ");
-        age = input.nextInt();
-        input.nextLine();
-        System.out.print("Entre votre module: ");
-        module = input.nextLine();
-        this.teacherDAO.save(new Teacher(nom, age, module));
-    }
-
-    private void listOfTeachers() {
-        this.teacherView.displayTeachers(this.teacherDAO.findAll());
-    }
-
-    private void editTeacher() {
-        int id, age;
-        String nom, module;
-        this.listOfTeachers();
-        if (this.teacherDAO.findAll().size() == 0) {
-            System.err.println("Pas des Enseignants");
-            return;
-        }
-        System.out.print("Entre l'id de l'Enseignant a modifier: ");
-        id = input.nextInt();
-        Teacher teacher = this.teacherDAO.findById(id);
-        if (teacher != null) {
-            System.out.print("Entre le nouveau nom: ");
-            input.nextLine();
-            nom = input.nextLine();
-            System.out.print("Entre le nouveau age: ");
-            age = input.nextInt();
-            input.nextLine();
-            System.out.print("Entre le nouveau module: ");
-            module = input.nextLine();
-            teacher.setNom(nom);
-            teacher.setAge(age);
-            teacher.setModule(module);
-            this.teacherDAO.update(teacher);
-        }else{
-            System.err.println("Pas d'Enseignant pour cet ID.");
+        try {
+            String nameValue = txtNom.getText();
+            String ageValue = txtAge.getText();
+            String moduleValue = txtModule.getText();
+            if (nameValue.isEmpty()) {
+                throw new Exception("Le nom est nécessaire.");
+            }
+            if (ageValue.isEmpty()) {
+                throw new Exception("L'âge est nécessaire.");
+            } else if (!isInteger(ageValue) || parseInt(ageValue) <= 0) {
+                throw new Exception("L'âge doit être un nombre entier positive.");
+            }
+            if (moduleValue.isEmpty()) {
+                throw new Exception("La Matière est nécessaire.");
+            }
+            boolean isSave = this.teacherDAO.save(new Teacher(nameValue, parseInt(ageValue), moduleValue));
+            if (isSave) {
+                JOptionPane.showMessageDialog(this.teacherView, "L'Enseignant a été ajouter avec succée.", "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+                this.emptyForm();
+                loadTeachers();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(teacherView, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void removeTeacher() {
-        int id;
-        this.listOfTeachers();
-        if (this.teacherDAO.findAll().size() == 0) {
-            return;
+    private void enableDeleteAndUpdateBtn(ListSelectionEvent e) {
+
+        // Supprimer les listeners du bouton de suppression
+        for (ActionListener al : this.deleteButton.getActionListeners()) {
+            this.deleteButton.removeActionListener(al);
         }
-        System.out.print("Entre l'id de l'Enseignant a supprimer: ");
-        id = input.nextInt();
-        this.teacherDAO.delete(id);
+
+        // Supprimer les listeners du bouton de modification
+        for (ActionListener al : this.updateButton.getActionListeners()) {
+            this.updateButton.removeActionListener(al);
+        }
+
+        if (!e.getValueIsAdjusting()) { // Éviter les événements multiples
+            int[] selectedRows = table.getSelectedRows(); // Obtenir les lignes sélectionnées
+
+            if (selectedRows.length == 1) { // Une seule ligne sélectionnée
+                this.deleteButton.setEnabled(true);
+                this.updateButton.setEnabled(true);
+                this.newButton.setEnabled(true);
+                this.addButton.setEnabled(false);
+
+                // Récupérer les données de la ligne sélectionnée
+                int id = (int) this.table.getValueAt(selectedRows[0], 0);
+                String nom = (String) this.tableModel.getValueAt(selectedRows[0], 1);
+                int age = (int) this.tableModel.getValueAt(selectedRows[0], 2);
+                String module = (String) this.tableModel.getValueAt(selectedRows[0], 3);
+
+                // Remplir les champs avec les données sélectionnées
+                this.txtNom.setText(nom);
+                this.txtAge.setText(String.valueOf(age));
+                this.txtModule.setText(module);
+
+                // Ajouter le nouveau listener pour la suppression
+                this.deleteButton.addActionListener(event -> this.deleteTeacher(id));
+                // Ajouter le nouveau listener pour la modification
+                this.updateButton.addActionListener(event -> this.updateTeacher(id));
+                // Ajouter le nouveau listener pour la nouveau étudiant
+                this.newButton.addActionListener(event -> this.enableAddNewTeacher());
+            } else { // Aucune ou plusieurs lignes sélectionnées
+                this.enableAddNewTeacher();
+            }
+        }
+    }
+
+    private void deleteTeacher(int id) {
+        int confirme = JOptionPane.showConfirmDialog(this.teacherView,
+                "Etes-vous sûr de vouloir supprimer cet Enseignant?", "Confirmation de suppression",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirme == JOptionPane.YES_OPTION) {
+            boolean isDeleted = this.teacherDAO.delete(id);
+            if (isDeleted) {
+                JOptionPane.showMessageDialog(this.teacherView, "L'Enseignant a été supprimé avec succès.", "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+                this.loadTeachers();
+            } else {
+                JOptionPane.showMessageDialog(this.teacherView,
+                        "Une erreur est survenue, merci de réessayer plus tard.", "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void updateTeacher(int id) {
+        try {
+            String nameValue = txtNom.getText();
+            String ageValue = txtAge.getText();
+            String moduleValue = txtModule.getText();
+            if (nameValue.isEmpty()) {
+                throw new Exception("Le nom est nécessaire.");
+            }
+            if (ageValue.isEmpty()) {
+                throw new Exception("L'âge est nécessaire.");
+            } else if (!isInteger(ageValue) || parseInt(ageValue) <= 0) {
+                throw new Exception("L'âge doit être un nombre entier positive.");
+            }
+            if (moduleValue.isEmpty()) {
+                throw new Exception("La Matière est nécessaire.");
+            }
+            boolean isSave = this.teacherDAO.update(new Teacher(id, nameValue, parseInt(ageValue), moduleValue));
+            if (isSave) {
+                JOptionPane.showMessageDialog(this.teacherView, "L'Enseignant a été modifier avec succée.", "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+                this.emptyForm();
+                loadTeachers();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(teacherView, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void enableAddNewTeacher() {
+        this.updateButton.setEnabled(false);
+        this.deleteButton.setEnabled(false);
+        this.newButton.setEnabled(false);
+        this.addButton.setEnabled(true);
+        this.emptyForm();
+        // Désélectionné la liste
+        this.table.clearSelection();
+    }
+
+    private void emptyForm() {
+        this.txtNom.setText("");
+        this.txtAge.setText("");
+        this.txtModule.setText("");
+    }
+
+    private boolean isInteger(String ageValue) {
+        try {
+            Integer.parseInt(ageValue);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private int parseInt(String ageValue) {
+        return Integer.parseInt(ageValue);
+    }
+
+    public TeacherView getTeacherView() {
+        return this.teacherView;
     }
 }

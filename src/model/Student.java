@@ -47,6 +47,7 @@ public class Student {
         this.classe = classe;
     }
 
+    @Override
     public String toString() {
         return "Id: " + this.getId() + ", Nom: " + this.getNom() + ", Age: " + this.getAge() +
                 " ans, La classe : " + this.getClasse().getClassName();
